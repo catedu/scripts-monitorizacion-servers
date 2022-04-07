@@ -21,8 +21,8 @@
 # For more information see the manual pages of crontab(5) and cron(8)
 # 
 # m h  dom mon dow   command
-*/30 * * * * /home/debian/scripts/disk-use-monitoring.sh
-*/30 * * * * /home/debian/scripts/disk-raid-status-monitoring.sh
-*/30 * * * * /home/debian/scripts/disk-raid-fail-monitoring.sh
-30 11 * * * /home/debian/scripts/log-elkarbackup-monitoring.sh
-00 12 1 * * /home/debian/scripts/send-log-elkarbackup.sh
+*/30 * * * * /home/debian/scripts-monitorizacion-servers/disk-use-monitoring.sh
+*/30 * * * * /home/debian/scripts-monitorizacion-servers/disk-raid-status-monitoring.sh
+*/30 * * * * /home/debian/scripts-monitorizacion-servers/disk-raid-fail-monitoring.sh
+30 11 * * * /home/debian/scripts-monitorizacion-servers/log-elkarbackup-monitoring.sh
+00 12 1 * * /home/debian/scripts-monitorizacion-servers/send-log-elkarbackup.sh

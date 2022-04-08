@@ -1,4 +1,5 @@
 #!/bin/bash
+ENTORNO="XXX"
 USERDB="xxx"
 PASSDB="xxx"
 URL_SLACK_INFO="https://xxx"

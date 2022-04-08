@@ -5,6 +5,11 @@
 ###############################
 # functions
 ###############################
+genera_mensaje_maquina(){
+    cat <<EOF
+        {"text":"[$ENTORNO]"}
+EOF
+}
 genera_mensaje(){
     cat <<EOF
         {"text":"$detalle"}
@@ -14,12 +19,12 @@ EOF
 # vars
 ###############################
 
-source /home/debian/scripts/env.sh
+source /home/debian/scripts-monitorizacion-servers/env.sh
 
 ###############################
 # main
 ###############################
 detalle=$(cat $LOG_FILE)
 # echo "detalle: $detalle"
-
+curl -X POST -H 'Content-type: application/json'  --data "$(genera_mensaje_maquina)" "${URL_SLACK_INFO}"
 curl -X POST -H 'Content-type: application/json'  --data "$(genera_mensaje)" "${URL_SLACK_INFO}"

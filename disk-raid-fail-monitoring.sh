@@ -8,14 +8,14 @@
 ###############################
 genera_mensaje(){
     cat <<EOF
-        {"text":"[FP-Backup] Fallan $fallan discos del RAID. Deberían ser 0. $NOTIFICAR_A "}
+        {"text":"[$ENTORNO] Fallan $fallan discos del RAID. Deberían ser 0. $NOTIFICAR_A "}
 EOF
 }
 ###############################
 # vars
 ###############################
 
-source /home/debian/scripts/env.sh
+source /home/debian/scripts-monitorizacion-servers/env.sh
 
 ###############################
 # main

@@ -9,14 +9,14 @@
 ###############################
 genera_mensaje(){
     cat <<EOF
-        {"text":"[FP-Backup] Fallan $fallan discos del RAID. Deberían ser 0. $NOTIFICAR_A "}
+        {"text":"[$ENTORNO] ATENCIÓN: Hoy hay intentos de acceso falidos al servidor. $NOTIFICAR_A . Log: $logDeHoy .  "}
 EOF
 }
 ###############################
 # vars
 ###############################
 
-source /home/debian/scripts/env.sh
+source /home/debian/scripts-monitorizacion-servers/env.sh
 
 ###############################
 # main
@@ -27,7 +27,16 @@ echo "month_short_name: $month_short_name"
 day=$( date -u +"%d" )
 echo "day: $day"
 
-if [ $day -lt 10 ]
+if [ $day -lt 10 ];
+then
+    day=${day#?}
+fi
+echo "day: $day"
 
-# logDeHoy=$( cat /var/log/auth.log | grep -e "$date" ) failure
-# echo "logDeHoy: $logDeHoy"
+logDeHoy=$( cat /var/log/auth.log | grep -e "$month_short_name  $day" | grep failure )
+
+if [ ! -z "$logDeHoy" ];
+then
+    # echo $logDeHoy
+    curl -X POST -H 'Content-type: application/json'  --data "$(genera_mensaje)" "${URL_SLACK_ALERTAS}"
+fi

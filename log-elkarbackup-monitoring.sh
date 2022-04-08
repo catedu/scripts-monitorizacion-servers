@@ -10,7 +10,7 @@
 # Lo que va entre * está en negritas
 genera_mensaje_maestro(){
     cat <<EOF
-        {"text":"*[FP-Backup] El $date la copia de $cliente - $trabajo ($link) llevó $tiempo.*"}
+        {"text":"*[$ENTORNO] El $date la copia de $cliente - $trabajo ($link) llevó $tiempo.*"}
 EOF
 }
 
@@ -23,7 +23,7 @@ EOF
 # vars
 ###############################
 
-source /home/debian/scripts/env.sh
+source /home/debian/scripts-monitorizacion-servers/env.sh
 
 ###############################
 # main

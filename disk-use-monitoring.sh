@@ -8,14 +8,14 @@
 ###############################
 genera_mensaje(){
     cat <<EOF
-        {"text":"[FP-Backup] El $porcentaje de $montado está en uso. Queda libre $absolutoLibre de $absolutoTotal. $NOTIFICAR_A"}
+        {"text":"[$ENTORNO] El $porcentaje de $montado está en uso. Queda libre $absolutoLibre de $absolutoTotal. $NOTIFICAR_A"}
 EOF
 }
 ###############################
 # vars
 ###############################
 
-source /home/debian/scripts/env.sh
+source /home/debian/scripts-monitorizacion-servers/env.sh
 
 ###############################
 # main

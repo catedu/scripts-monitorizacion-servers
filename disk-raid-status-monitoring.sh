@@ -7,14 +7,14 @@
 ###############################
 genera_mensaje(){
     cat <<EOF
-        {"text":"[FP-Backup] Solo hay $activos discos activos en el RAID. Deberían ser 4. $NOTIFICAR_A"}
+        {"text":"[$ENTORNO] Solo hay $activos discos activos en el RAID. Deberían ser 4. $NOTIFICAR_A"}
 EOF
 }
 ###############################
 # vars
 ###############################
 
-source /home/debian/scripts/env.sh
+source /home/debian/scripts-monitorizacion-servers/env.sh
 
 ###############################
 # main

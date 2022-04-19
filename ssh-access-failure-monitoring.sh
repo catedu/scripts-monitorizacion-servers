@@ -2,7 +2,6 @@
 # Script que comprueba si hay intentos de acceso fallidos
 # y de ser así manda mensaje al slack de CATEDU al canal #servidores_alertas mencionando a $NOTIFICAR_A
 # lo hace a través de examinar el contenido de /var/log/auth.log
-# TODO: En elaboración
 
 ###############################
 # functions

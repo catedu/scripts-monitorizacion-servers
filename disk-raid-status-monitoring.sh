@@ -1,6 +1,7 @@
 #!/bin/bash
 # Script que comprueba si los 4 discos involucrados en el RAID de este equipo están ativos. De no ser así manda un 
 # mensaje al slack de CATEDU al canal #servidores_alertas notificándolo a $NOTIFICAR_A
+# TODO prescindir de node exporter y usar "sudo mdadm -D /dev/md127" o "cat /proc/mdstat"
 
 ###############################
 # functions

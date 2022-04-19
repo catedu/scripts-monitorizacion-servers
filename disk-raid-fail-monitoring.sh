@@ -1,7 +1,8 @@
 #!/bin/bash
 # Script que comprueba si alguno de los discos del RAID ha fallado
 # y de ser así manda mensaje al slack de CATEDU al canal #servidores_alertas mencionando a $NOTIFICAR_A
-
+# TODO prescindir de node exporter y usar "sudo mdadm -D /dev/md127" o "cat /proc/mdstat"
+# TODO mas info en https://unix.stackexchange.com/questions/28636/how-to-check-mdadm-raids-while-running
 
 ###############################
 # functions

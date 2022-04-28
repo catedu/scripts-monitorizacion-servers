@@ -34,16 +34,16 @@ date=$( date -u +"%Y-%m-%d" )
 
 for link in $( docker exec -ti docker-backup_db_1 mysql -u ${USERDB} -p${PASSDB} -N -e "select distinct link from elkarbackup.LogRecord where datetime like '$date%' and link like '%job%' and link is not null and level > 100" )
 do
-    # echo "link: $link"
+    echo "link: $link"
     tiempo=$( docker exec -ti docker-backup_db_1 mysql -u ${USERDB} -p${PASSDB} -N -e "select TIMEDIFF(post.dateTime, pre.dateTime) from (select dateTime from elkarbackup.LogRecord where link = '$link' and dateTime like '$date%' and source = 'RunPreJobScriptsCommand'  ) pre, (select dateTime from elkarbackup.LogRecord where link = '$link' and dateTime like '$date%' and source = 'RunPostJobScriptsCommand'  ) post" )
-    # echo "tiempo: $tiempo"
+    echo "tiempo: $tiempo"
     IFS='/' array=($link)
-    # echo "client_id: ${array[2]}"
-    # echo "job_id: ${array[4]}"
+    echo "client_id: ${array[2]}"
+    echo "job_id: ${array[4]}"
     cliente=$( docker exec -ti docker-backup_db_1 mysql -u ${USERDB} -p${PASSDB} -N -e "select name from elkarbackup.Client where id = '${array[2]}' " )
-    # echo "cliente: $cliente"
+    echo "cliente: $cliente"
     trabajo=$( docker exec -ti docker-backup_db_1 mysql -u ${USERDB} -p${PASSDB} -N -e "select name from elkarbackup.Job where client_id = '${array[2]}' and id = '${array[4]}'" )
-    # echo "trabajo: $trabajo"
+    echo "trabajo: $trabajo"
 
     # Envío el mensaje a SLACK
     curl -X POST -H 'Content-type: application/json'  --data "$(genera_mensaje_maestro)" "${URL_SLACK_INFO}"

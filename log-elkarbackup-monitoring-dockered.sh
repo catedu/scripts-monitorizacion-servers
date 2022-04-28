@@ -29,6 +29,7 @@ source /home/debian/scripts-monitorizacion-servers/env.sh
 # main
 ###############################
 date=$( date -u +"%Y-%m-%d" )
+echo "date: $date"
 
 # Recorro las tareas y por cada una muestro cuanto tiempo ha pasado entre sus pre y post scripts para ver su duración
 

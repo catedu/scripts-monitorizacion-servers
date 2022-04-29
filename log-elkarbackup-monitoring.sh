@@ -19,6 +19,12 @@ genera_mensaje_detalle(){
         {"text":"$detalle"}
 EOF
 }
+
+genera_mensaje_maestro_errores(){
+    cat <<EOF
+        {"text":"*[$ENTORNO] $date : $value* $NOTIFICAR_A "}
+EOF
+}
 ###############################
 # vars
 ###############################
@@ -57,4 +63,10 @@ do
         curl -X POST -H 'Content-type: application/json'  --data "$(genera_mensaje_detalle)" "${URL_SLACK_INFO}"
     done
 
+done
+
+# Recorro los registros del día de hoy cuyo nivel corresponde a warnings o errors
+mysql -u ${USERDB} -p${PASSDB} -N -e "select link, message from elkarbackup.LogRecord where datetime like '$date%' and link like '%job%' and link is not null and level > 200" | while read -r id value;
+do
+    curl -X POST -H 'Content-type: application/json'  --data "$(genera_mensaje_maestro_errores)" "${URL_SLACK_ALERTAS}"
 done

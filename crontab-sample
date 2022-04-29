@@ -28,7 +28,7 @@
 */30 * * * * /home/debian/scripts-monitorizacion-servers/disk-raid-fail-monitoring.sh
 
 # Copias de seguridad
-30 11 * * * /home/debian/scripts-monitorizacion-servers/log-elkarbackup-monitoring.sh
+58 23 * * * /home/debian/scripts-monitorizacion-servers/log-elkarbackup-monitoring.sh
 00 12 * * 1 /home/debian/scripts-monitorizacion-servers/send-log-elkarbackup.sh
 
 # Logs

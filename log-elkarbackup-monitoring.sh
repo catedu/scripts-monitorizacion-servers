@@ -52,7 +52,7 @@ do
     if [[ "$activo" = "0" ]]; then
         continue
     fi
-    
+
     # Obtengo el tiempo que lleva
     tiempo=$( mysql -u ${USERDB} -p${PASSDB} -N -e "select TIMEDIFF(post.dateTime, pre.dateTime) from (select dateTime from elkarbackup.LogRecord where link = '$link' and dateTime like '$date%' and source = 'RunPreJobScriptsCommand'  ) pre, (select dateTime from elkarbackup.LogRecord where link = '$link' and dateTime like '$date%' and source = 'RunPostJobScriptsCommand'  ) post" )
     # echo "tiempo: $tiempo"

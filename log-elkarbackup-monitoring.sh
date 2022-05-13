@@ -41,18 +41,33 @@ date=$( date -u +"%Y-%m-%d" )
 for link in $( mysql -u ${USERDB} -p${PASSDB} -N -e "select distinct link from elkarbackup.LogRecord where datetime like '$date%' and link like '%job%' and link is not null and level > 100" )
 do
     # echo "link: $link"
-    tiempo=$( mysql -u ${USERDB} -p${PASSDB} -N -e "select TIMEDIFF(post.dateTime, pre.dateTime) from (select dateTime from elkarbackup.LogRecord where link = '$link' and dateTime like '$date%' and source = 'RunPreJobScriptsCommand'  ) pre, (select dateTime from elkarbackup.LogRecord where link = '$link' and dateTime like '$date%' and source = 'RunPostJobScriptsCommand'  ) post" )
-    # echo "tiempo: $tiempo"
+
+    # Descompongo el link para obtener el client y el job
     IFS='/' array=($link)
     # echo "client_id: ${array[2]}"
     # echo "job_id: ${array[4]}"
+
+    # Compruebo si el job está activo antes de hacer nada. Si es un job inactivo lo ignoramos
+    activo=$( mysql -u ${USERDB} -p${PASSDB} -N -e "select isActive from elkarbackup.Job where client_id = '${array[2]}' and id = '${array[4]}'" )
+    if [[ "$activo" = "0" ]]; then
+        continue
+    fi
+    
+    # Obtengo el tiempo que lleva
+    tiempo=$( mysql -u ${USERDB} -p${PASSDB} -N -e "select TIMEDIFF(post.dateTime, pre.dateTime) from (select dateTime from elkarbackup.LogRecord where link = '$link' and dateTime like '$date%' and source = 'RunPreJobScriptsCommand'  ) pre, (select dateTime from elkarbackup.LogRecord where link = '$link' and dateTime like '$date%' and source = 'RunPostJobScriptsCommand'  ) post" )
+    # echo "tiempo: $tiempo"
+
+    #Obtengo el nombre del cliente
     cliente=$( mysql -u ${USERDB} -p${PASSDB} -N -e "select name from elkarbackup.Client where id = '${array[2]}' " )
     # echo "cliente: $cliente"
+
+    # Obtengo el nombre del job
     trabajo=$( mysql -u ${USERDB} -p${PASSDB} -N -e "select name from elkarbackup.Job where client_id = '${array[2]}' and id = '${array[4]}'" )
     # echo "trabajo: $trabajo"
 
     # Envío el mensaje a SLACK
     curl -X POST -H 'Content-type: application/json'  --data "$(genera_mensaje_maestro)" "${URL_SLACK_INFO}"
+
     # Llevo los tiempos a un fichero de log para detectar fácilmente los tiempos de backup de cada job
     echo "[FP-Backup] El $date la copia de $cliente - $trabajo ($link) llevó $tiempo." | sudo tee -a "${LOG_FILE}"
 

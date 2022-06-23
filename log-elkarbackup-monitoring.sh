@@ -41,11 +41,12 @@ errores="FALSE"
 mysql -u ${USERDB} -p${PASSDB} -N -e "select link, message from elkarbackup.LogRecord where datetime like '$date%' and link like '%job%' and link is not null and level > 200" | while read -r id value;
 do
     errores="TRUE"
-    curl -X POST -H 'Content-type: application/json'  --data "$(genera_mensaje_maestro_errores)" "${URL_SLACK_ALERTAS}"
+    echo "Cambio valor de errores a true. errores = ${errores}"
+    curl -X POST -H 'Content-type: application/json'  --data "$(genera_mensaje_maestro_errores)" "${URL_SLACK_ALERTAS}"    
 done
 
 # Recorro las tareas y por cada una muestro cuanto tiempo ha pasado entre sus pre y post scripts para ver su duración
-
+echo "errores = ${errores}"
 if [[ "${VERBOSE}"  = "TRUE"  ]]; then
     for link in $( mysql -u ${USERDB} -p${PASSDB} -N -e "select distinct link from elkarbackup.LogRecord where datetime like '$date%' and link like '%job%' and link is not null and level > 100" )
     do
@@ -89,8 +90,8 @@ if [[ "${VERBOSE}"  = "TRUE"  ]]; then
 
     done
 fi
-
+echo "errores = ${errores}"
 if [[ "${errores}"  = "FALSE"  ]]; then
-    detalle = "No hay errores"
+    detalle="No hay errores"
     curl -X POST -H 'Content-type: application/json'  --data "$(genera_mensaje_detalle)" "${URL_SLACK_INFO}"
 fi

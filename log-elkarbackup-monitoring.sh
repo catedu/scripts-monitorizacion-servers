@@ -14,6 +14,13 @@ genera_mensaje_maestro(){
 EOF
 }
 
+
+genera_mensaje(){
+    cat <<EOF
+        {"text":"*[$ENTORNO] $mensaje*"}
+EOF
+}
+
 genera_mensaje_detalle(){
     cat <<EOF
         {"text":"$detalle"}
@@ -41,12 +48,10 @@ errores="FALSE"
 mysql -u ${USERDB} -p${PASSDB} -N -e "select link, message from elkarbackup.LogRecord where datetime like '$date%' and link like '%job%' and link is not null and level > 200" | while read -r id value;
 do
     errores="TRUE"
-    echo "Cambio valor de errores a true. errores = ${errores}"
-    curl -X POST -H 'Content-type: application/json'  --data "$(genera_mensaje_maestro_errores)" "${URL_SLACK_ALERTAS}"    
+    curl -X POST -H 'Content-type: application/json'  --data "$(genera_mensaje_maestro_errores)" "${URL_SLACK_ALERTAS}"
 done
 
-# Recorro las tareas y por cada una muestro cuanto tiempo ha pasado entre sus pre y post scripts para ver su duración
-echo "errores = ${errores}"
+# Recorro las tareas y por cada una muestro cuanto tiempo ha pasado entre sus pre y post scripts para ver su duración. Solo si configurado que sea verbose
 if [[ "${VERBOSE}"  = "TRUE"  ]]; then
     for link in $( mysql -u ${USERDB} -p${PASSDB} -N -e "select distinct link from elkarbackup.LogRecord where datetime like '$date%' and link like '%job%' and link is not null and level > 100" )
     do
@@ -90,8 +95,8 @@ if [[ "${VERBOSE}"  = "TRUE"  ]]; then
 
     done
 fi
-echo "errores = ${errores}"
+
 if [[ "${errores}"  = "FALSE"  ]]; then
-    detalle="No hay errores"
-    curl -X POST -H 'Content-type: application/json'  --data "$(genera_mensaje_detalle)" "${URL_SLACK_INFO}"
+    mensaje="No hay errores en la copia de seguridad"
+    curl -X POST -H 'Content-type: application/json'  --data "$(genera_mensaje)" "${URL_SLACK_INFO}"
 fi

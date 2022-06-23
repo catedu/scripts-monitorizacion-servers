@@ -91,6 +91,6 @@ if [[ "${VERBOSE}"  = "TRUE"  ]]; then
 fi
 
 if [[ "${errores}"  = "FALSE"  ]]; then
-    $detalle = "No hay errores"
+    detalle = "No hay errores"
     curl -X POST -H 'Content-type: application/json'  --data "$(genera_mensaje_detalle)" "${URL_SLACK_INFO}"
 fi

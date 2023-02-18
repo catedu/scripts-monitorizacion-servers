@@ -36,9 +36,8 @@ montado=$(echo $disco | cut -d" " -f1)
 # Si mas del 80% está en uso me mando chivato
 if [ $porcentajeSinSimbolo -gt 79 ]
 then
-    curl -X POST \
-    -H 'Content-type: application/json' \
-    --data "$(genera_mensaje)" \
-    "${URL_SLACK_ALERTAS}"
-    
+    ! grep $(date +%Y%m%d) disk-use-monitoring.log >/dev/null && curl -X POST -H 'Content-type: application/json' --data "$(genera_mensaje)" "${URL_SLACK_ALERTAS}"
+
+    date +%Y%m%d > disk-use-monitoring.log
+
 fi

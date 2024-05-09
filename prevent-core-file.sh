@@ -1,8 +1,7 @@
 #!/bin/bash
-# Script que comprueba si hay intentos de acceso fallidos
+# Script que comprueba si existe el fichero core que genera moodle y nos impide las copias ed seguridad
 # y de ser así manda mensaje al slack de CATEDU al canal #servidores_alertas mencionando a $NOTIFICAR_A
-# lo hace a través de examinar el contenido de /var/log/auth.log
-# TODO: Una vez verifique que funciona en FP hacer que busque en cualquier ruta con ese patrón
+
 # TODO: Hacer que borre el fichero una vez localizado
 
 ###############################
@@ -10,7 +9,7 @@
 ###############################
 genera_mensaje(){
     cat <<EOF
-        {"text":"[$ENTORNO] ATENCIÓN: Se ha generado un fichero core. $NOTIFICAR_A . Ubicacion: $ruta .  "}
+        {"text":"[$ENTORNO] ATENCIÓN: Se ha generado un fichero core. $NOTIFICAR_A . Ubicacion: $resultado .  "}
 EOF
 }
 ###############################
@@ -22,13 +21,10 @@ source /home/debian/scripts-monitorizacion-servers/env.sh
 ###############################
 # main
 ###############################
-resultado=$(find "/var/moodle-docker-deploy/www.adistanciafparagon.es/moodle-code/admin/cli" -type f -name "core" )
-ruta="";
+resultado=$(find "/var/moodle-docker-deploy/*/moodle-code/admin/cli" -type f -name "core" )
 # echo $resultado
 #
 if  [ -n "$resultado" ]; then
-    echo "He encontrado el fichero"
-    ruta="/var/moodle-docker-deploy/www.adistanciafparagon.es/moodle-code/admin/cli/"
     curl -X POST -H 'Content-type: application/json'  --data "$(genera_mensaje)" "${URL_SLACK_ALERTAS}"
 else
     echo "NO he encontrado el fichero"
